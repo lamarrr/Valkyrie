@@ -22,7 +22,7 @@
 
 -- GUID for assets and objects identification. widgets, paths, images,
 helps with modification and renaming, etc.
-
+-- sharing across workspaces, computters, networks, and the likes becomes easier using uuids as they are sufficiently unique random numbers 64-bit preferable
 
 
 
