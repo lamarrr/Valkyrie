@@ -19,6 +19,14 @@
 - stx::span doesn't support zero-extent arrays
 
 # vlk::ui TODO
+
+-- GUID for assets and objects identification. widgets, paths, images,
+helps with modification and renaming, etc.
+-- sharing across workspaces, computters, networks, and the likes becomes easier using uuids as they are sufficiently unique random numbers 64-bit preferable
+
+
+
+
 - In the contributing guide state how skia isn't thread-safe and the graphics part is basically a vulkan wrapper
 - consider making the parent inject the effects and add them to an effect tree, with all of the widgets having individual effects as a result we need to be able to render the effects independent of the widget, we'll thus need bindings for them
 - Diagram of Asset manager sqe, cqe
