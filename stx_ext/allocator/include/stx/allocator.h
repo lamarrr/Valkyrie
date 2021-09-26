@@ -8,9 +8,23 @@
 #include "stx/result.h"
 #include "stx/void.h"
 
+
+
+using u8 = uint8_t;
+using u16 = uint16_t;
+using u32 = uint32_t;
+using u64 = uint64_t;
+using usize = size_t;
+using memory_offset = void*;
+
 namespace stx {
 
-enum class [[nodiscard]] AllocError : uint8_t{None, NoMemory};
+enum class [[nodiscard]] AllocError : u8{None, NoMemory};
+
+struct AllocResult {
+  AllocError error = AllocError::NoMemory;
+  memory_offset memory = nullptr;
+};
 
 // a static allocator is always available for the lifetime of the program.
 //
@@ -24,9 +38,9 @@ struct AllocatorHandle {
   //
   // returns `nullptr` output if `size` is 0.
   //
-  // alignment must be greater than 0.
+  // \\\\ alignment must be greater than 0.
   //
-  virtual AllocError allocate(void *&out_mem, size_t size) = 0;
+  virtual AllocResult allocate(usize size) = 0;
 
   // if there is not enough memory, the old memory block is not freed and
   // `AllocError::NoMemory` is returned without modifying the output pointer.
@@ -45,25 +59,25 @@ struct AllocatorHandle {
   // if successful, the bytes in the previous pointer must be copied into the
   // new pointer.
   //
-  virtual AllocError reallocate(void *&out_mem, size_t new_size) = 0;
+  virtual AllocResult reallocate(memory_offset memory, usize new_size) = 0;
 
   // if `ptr` is `nullptr`, nothing is done.
   // if `ptr` is not `nullptr`, it must have been previously allocated by
   // calling `allocate`, or `reallocate`
   //
-  virtual void deallocate(void *mem) = 0;
+  virtual void deallocate(memory_offset memory) = 0;
 };
 
 struct NoopAllocatorHandle final : public AllocatorHandle {
-  virtual AllocError allocate(void *&, size_t) override {
-    return AllocError::NoMemory;
+  virtual AllocResult allocate(usize) override {
+    return AllocResult{};
   }
 
-  virtual AllocError reallocate(void *&, size_t) override {
-    return AllocError::NoMemory;
+  virtual AllocResult reallocate(memory_offset, usize) override {
+    return AllocResult{};
   }
 
-  virtual void deallocate(void *) override {
+  virtual void deallocate(memory_offset) override {
     // no-op
   }
 };
